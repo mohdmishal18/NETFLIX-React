@@ -7,6 +7,8 @@ import { API_KEY , imageUrl } from '../../constants/constants';
 function RowPost(props) {
   const [movies , setMovies] = useState([])
   const [urlId , setUrlId] =useState("")
+  const [showVideo, setShowVideo] = useState(false); // State to track whether to show the video
+
   useEffect(() =>
   {
     axios.get(props.url)
@@ -37,6 +39,7 @@ function RowPost(props) {
       if(response.data.results.length !== 0)
       {
         setUrlId(response.data.results[0])
+        setShowVideo(true); // Show the video when available
       }
       else
       {
@@ -44,6 +47,11 @@ function RowPost(props) {
       }
     })
   }
+
+  const handleCloseVideo = () => {
+    setShowVideo(false); // Hide the video when the close button is clicked
+  }
+
 
   return (
     <div className='row'>
@@ -55,9 +63,12 @@ function RowPost(props) {
           )
         }
       </div>
-      {
-        urlId &&  <Youtube videoId={urlId.key} opts={opts}/>
-      }
+      {showVideo && (
+        <>
+          <button onClick={handleCloseVideo} className="close-button">X</button>
+          <Youtube videoId={urlId.key} opts={opts}/>
+        </>
+      )}
     </div>
   );
 }

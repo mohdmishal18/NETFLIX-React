@@ -8,13 +8,21 @@ function Banner()
   const [movie, setMovie] = useState()
   useEffect(() =>
   {
+    const random = Math.floor(Math.random() * 18)
+
     axios.get(`trending/all/week?api_key=${API_KEY}&language=en-US`)
     .then((response) =>
     {
       console.log(response.data.results[0])
-      setMovie(response.data.results[1])
+      setMovie(response.data.results[random])
     })
   },[])
+  const truncateOverview = (overview, maxLength) => {
+    if (overview && overview.split(' ').length > maxLength) {
+      return overview.split(' ').slice(0, maxLength).join(' ') + '...'
+    }
+    return overview
+  }
   return (
     <div
     style={{backgroundImage : `url(${movie ? imageUrl + movie.backdrop_path : ""})`}}
@@ -25,7 +33,7 @@ function Banner()
                 <button className='button'>Play</button>
                 <button className='button'>My List</button>
             </div>
-            <h1 className='description'>{movie ? movie.overview : ""}</h1>
+            <h1 className='description'>{movie ? truncateOverview(movie.overview, 60) : ""}</h1>
         </div>
         <div className="fade_bottom">
 
